@@ -1,5 +1,6 @@
 package com.gui.guessio.documents;
 
+import com.gui.guessio.ENUM.MatchStatus;
 import org.springframework.beans.factory.config.YamlProcessor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -18,7 +19,7 @@ public class Match {
 
     private Game answer;
 
-    private YamlProcessor.MatchStatus status;
+    private MatchStatus status;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -50,12 +51,12 @@ public class Match {
         this.answer = answer;
     }
 
-    public YamlProcessor.MatchStatus getStatus() {
+    public MatchStatus getStatus() {
         return status;
     }
 
-    public void setStatus(YamlProcessor.MatchStatus status) {
-        this.status = status;
+    public void setStatus(MatchStatus matchStatus) {
+        this.status = matchStatus;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -77,7 +78,7 @@ public class Match {
     public Match() {
     }
 
-    public Match(String id, List<Game> attempts, Game answer, YamlProcessor.MatchStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Match(String id, List<Game> attempts, Game answer,MatchStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.attempts = attempts;
         this.answer = answer;

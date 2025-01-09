@@ -1,6 +1,6 @@
 package com.gui.guessio.ENUM;
 
-public enum MatchEnum {
+public enum MatchStatus {
     STARTED, ONGOING, FINISHED
 
 }

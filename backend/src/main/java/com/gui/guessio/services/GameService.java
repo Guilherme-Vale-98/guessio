@@ -2,6 +2,7 @@ package com.gui.guessio.services;
 
 import com.gui.guessio.Repositories.GameRepository;
 import com.gui.guessio.documents.Game;
+import com.gui.guessio.exceptions.GameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -22,7 +23,8 @@ public class GameService {
         return results.getUniqueMappedResult();
     }
 
-    public Game getGameByName(String name){
-        return gameRepository.findByName(name).orElseThrow();
+    public Game getGameByName(String name) {
+        return gameRepository.findByName(name)
+                .orElseThrow(() -> new GameNotFoundException("Game with name '" + name + "' not found."));
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document("matches")
@@ -15,7 +16,7 @@ public class Match {
     @Id
     public String id;
 
-    private List<Game> attempts;
+    private List<Game> attempts = new ArrayList<>();
 
     private Game answer;
 

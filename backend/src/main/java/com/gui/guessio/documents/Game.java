@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Document("games")
 public class Game {
@@ -143,5 +144,18 @@ public class Game {
                 ", developers=" + developers +
                 ", publishers=" + publishers +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game = (Game) o;
+        return Double.compare(getRating(), game.getRating()) == 0 && getMetacritic() == game.getMetacritic() && getRatingsCount() == game.getRatingsCount() && Objects.equals(getId(), game.getId()) && Objects.equals(getName(), game.getName()) && Objects.equals(getReleased(), game.getReleased()) && Objects.equals(getGenres(), game.getGenres()) && Objects.equals(getPlatforms(), game.getPlatforms()) && Objects.equals(getImageUrls(), game.getImageUrls()) && Objects.equals(getDevelopers(), game.getDevelopers()) && Objects.equals(getPublishers(), game.getPublishers());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getReleased(), getRating(), getMetacritic(), getRatingsCount(), getGenres(), getPlatforms(), getImageUrls(), getDevelopers(), getPublishers());
     }
 }

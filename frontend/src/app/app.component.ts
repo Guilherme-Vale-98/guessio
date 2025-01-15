@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { OptionBoxComponent } from "./option-box/option-box.component";
 import { CommonModule } from '@angular/common';
+import { MatchService } from './services/match.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,9 @@ import { CommonModule } from '@angular/common';
 export class AppComponent implements OnInit  {
   isRootPath = false;
   title = 'frontend';
-  constructor(private router: Router) {}
+  
+  constructor(private router: Router, private matchService: MatchService) {}
+  
   ngOnInit(): void {
       this.router.events.subscribe((event) =>{
         if(event instanceof NavigationEnd){
@@ -21,5 +24,4 @@ export class AppComponent implements OnInit  {
         }
       })
   }
-  
 }

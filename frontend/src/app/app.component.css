@@ -2,3 +2,6 @@
     background-color: rgb(0 0 0 / 0.3);
     color: #fff;
   }
+  .text-shadow{
+    text-shadow: 1px 1px 2px black;
+}

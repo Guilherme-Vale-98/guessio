@@ -17,7 +17,7 @@ public class MatchController {
     private GameService gameService;
     @Autowired
     private MatchService matchService;
-    @GetMapping("/matches")
+    @GetMapping("/match")
     public Match startMatch(){
         return matchService.createNewMatch();
     }

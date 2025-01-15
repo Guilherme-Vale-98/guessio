@@ -15,7 +15,7 @@ export class AppComponent implements OnInit  {
   isRootPath = false;
   title = 'frontend';
   
-  constructor(private router: Router, private matchService: MatchService) {}
+  constructor(private router: Router) {}
   
   ngOnInit(): void {
       this.router.events.subscribe((event) =>{

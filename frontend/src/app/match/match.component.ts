@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { MatchInterface } from '../types/MatchInterface';
+import { MatchService } from '../services/match.service';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-match',
@@ -8,6 +11,12 @@ import { Component } from '@angular/core';
   templateUrl: './match.component.html',
   styleUrl: './match.component.css'
 })
-export class MatchComponent {
+export class MatchComponent implements OnInit{
+  match$!: Observable<MatchInterface>
 
+  constructor(private matchService: MatchService){}
+
+  ngOnInit(): void {
+    this.match$ = this.matchService.getMatch();
+  }
 }

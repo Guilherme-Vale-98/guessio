@@ -1,1 +1,10 @@
-<p>match works!</p>
+<div *ngIf="match$ | async as match; else loading">
+    <h1>{{ match.answer.name }}</h1>
+    <p>Date: {{ match.date }}</p>
+    <ul>
+    </ul>
+  </div>
+  
+  <ng-template #loading>
+    <p>Loading match data...</p>
+  </ng-template>

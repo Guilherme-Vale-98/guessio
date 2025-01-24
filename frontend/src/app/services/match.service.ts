@@ -13,4 +13,9 @@ export class MatchService {
   getMatch(): Observable<MatchInterface>{
     return this.http.get<MatchInterface>("http://localhost:8080/api/v1/match");
   }
+
+  attemptAnswer(game: string, matchId: string): Observable<MatchInterface> {
+    let gameTitleJson = JSON.parse(`{"gameTitle": "${game}"}`)
+    return this.http.post<MatchInterface>(`http://localhost:8080/api/v1/matches/${matchId}`, gameTitleJson);
+  }
 }

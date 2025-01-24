@@ -1,10 +1,27 @@
-<div *ngIf="match$ | async as match; else loading">
-    <h1>{{ match.answer.name }}</h1>
-    <p>Date: {{ match.date }}</p>
-    <ul>
-    </ul>
+<div *ngIf="match" class="w-[600px] h-[100vh] flex flex-col gap-2 mx-auto items-center   bg-amber-900">
+    <div>
+        <img class="h-[450px] w-[350px]" [src]="match.answer.imageUrls[0]" alt="First Image" />
+      </div>
+    <div class="w-2/3 flex justify-between gal-10 flex-wrap" >
+        <input [(ngModel)]="searchQuery"  (input)="onSearch()" id="search" class="h-12 mb-4 w-full rounded-lg px-5 text-lg" type="text" placeholder="Search for a videogame"/>
+        <button class="h-10 w-1/3 text-white px-5 bg-amber-600  text-xl">Skip!</button>
+        <button class="h-10 w-1/2 text-white px-5 bg-blue-600 text-xl"
+            (click)="onGuessClick()"
+        >Guess</button>
+    </div>
+    <div class="w-full mt-4">
+        <h3 class="text-white text-lg font-bold">Attempt:</h3>
+        <ul class="text-white text-md">
+          <li *ngFor="let attempt of match.attempts">{{ attempt.name }}</li>
+        </ul>
+    </div>
+</div>
+
+<div *ngIf="errorMessage.message" class="error-message">
+  <div>
+    {{ errorMessage.title }}
   </div>
-  
-  <ng-template #loading>
-    <p>Loading match data...</p>
-  </ng-template>
+  <div>
+    {{ errorMessage.message }}
+  </div>
+</div>

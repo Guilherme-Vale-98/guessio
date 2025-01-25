@@ -77,7 +77,9 @@ export class MatchComponent implements OnInit {
         this.errorMessage['title'] = error.name;
       }
     });
+  }
 
-
+  newMatch(): void {
+    window.location.reload();
   }
 }

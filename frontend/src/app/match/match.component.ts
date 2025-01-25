@@ -27,29 +27,36 @@ export class MatchComponent implements OnInit {
       error: (error) =>{
         this.errorMessage['message'] = error.message
         this.errorMessage['title'] = error.name
-        console.log(this.errorMessage)
       }
     });
   }
 
   onSearch(): void {
-    console.log(this.searchQuery);
+//    console.log(this.searchQuery);
   }
 
+  getBackgroundColor(attemptArray: string[], answerArray: string[]){
+    
+    const containsAny = attemptArray.every(entry => !answerArray.includes(entry))
+    if (containsAny) return "#D91515"
+  
+    const allMatch = attemptArray.every(entry => answerArray.includes(entry)) && answerArray.every(entry => attemptArray.includes(entry));
+    if (allMatch) return 'green';
+
+    return '#D7AB19';
+  }
   onGuessClick(): void {
     if (!this.match) return;
-  
+    this.errorMessage = {title:"", message: ""};
     this.matchService.attemptAnswer(this.searchQuery, this.match.id).subscribe({
       next: (updatedMatch) => {
         this.match = updatedMatch;
         console.log(this.match);
       },
       error: (error) => {
-        console.error('Error:', error);
-      },
-      complete: () => {
-        console.log('Guess attempt complete.');
-      },
+        this.errorMessage['message'] = error.error;
+        this.errorMessage['title'] = error.name;
+      }
     });
 
 

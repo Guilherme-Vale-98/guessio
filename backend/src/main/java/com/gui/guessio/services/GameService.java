@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GameService {
     @Autowired
@@ -26,5 +28,10 @@ public class GameService {
     public Game getGameByName(String name) {
         return gameRepository.findByName(name)
                 .orElseThrow(() -> new GameNotFoundException("Game with name '" + name + "' not found."));
+    }
+
+    public List<String> getAllGamesNames(){
+        List<Game> allGames = gameRepository.findAllGameNames();
+        return allGames.stream().map(Game::getName).toList();
     }
 }

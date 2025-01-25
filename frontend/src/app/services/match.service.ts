@@ -18,4 +18,8 @@ export class MatchService {
     let gameTitleJson = JSON.parse(`{"gameTitle": "${game}"}`)
     return this.http.post<MatchInterface>(`http://localhost:8080/api/v1/matches/${matchId}`, gameTitleJson);
   }
+  
+  getGameNames(): Observable<string[]>{
+    return this.http.get<string[]>("http://localhost:8080/api/v1/games")
+  }
 }

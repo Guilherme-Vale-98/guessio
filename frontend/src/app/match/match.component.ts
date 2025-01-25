@@ -16,6 +16,9 @@ export class MatchComponent implements OnInit {
   match!: MatchInterface; 
   searchQuery: string = '';
   errorMessage: ErrorInterface = {title:"", message: ""}; 
+  allGameNames: string[] = [];
+  filteredGameNames: string[] = [];
+
 
   constructor(private matchService: MatchService) {}
 
@@ -29,10 +32,25 @@ export class MatchComponent implements OnInit {
         this.errorMessage['title'] = error.name
       }
     });
+
+
+    this.matchService.getGameNames().subscribe({
+      next:(gameNames) => {
+        this.allGameNames = gameNames;
+      },
+      error: (error) =>{
+        this.errorMessage['message'] = error.message
+        this.errorMessage['title'] = error.name
+      }
+    })
   }
 
   onSearch(): void {
-//    console.log(this.searchQuery);
+    console.log(this.allGameNames)
+    this.filteredGameNames = this.allGameNames.filter((name) =>
+      name.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+    console.log(this.filteredGameNames);
   }
 
   getBackgroundColor(attemptArray: string[], answerArray: string[]){
@@ -47,6 +65,7 @@ export class MatchComponent implements OnInit {
   }
   onGuessClick(): void {
     if (!this.match) return;
+    if (!this.filteredGameNames.includes(this.searchQuery)) return;
     this.errorMessage = {title:"", message: ""};
     this.matchService.attemptAnswer(this.searchQuery, this.match.id).subscribe({
       next: (updatedMatch) => {

@@ -27,3 +27,27 @@
     box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.5),
                 inset 3px -3px 8px rgba(0, 0, 0, 0.5); 
 }
+
+.autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    z-index: 10;
+  }
+  
+  .autocomplete-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .autocomplete-item:hover {
+    background-color: #f0f0f0;
+  }
+  

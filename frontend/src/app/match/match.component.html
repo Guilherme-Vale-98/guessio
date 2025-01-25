@@ -10,34 +10,49 @@
   *ngIf="match"
   class=" h-[100vh] flex flex-col gap-2 mx-auto items-center"
 >
-  <div class=" flex flex-col mx-auto items-center gap-2">
-    <div>
-      <img
-        class="h-[450px] w-[350px]"
-        [src]="match.answer.imageUrls[0]"
-        alt="First Image"
-      />
-    </div>
-    <div class="w-full flex justify-between gal-10 flex-wrap">
+<div class="flex flex-col mx-auto items-center gap-2 relative">
+  <div>
+    <img
+      class="h-[450px] w-[350px]"
+      [src]="match.answer.imageUrls[0]"
+      alt="First Image"
+    />
+  </div>
+  <div class="w-full flex justify-between gal-10 flex-wrap">
+    <div class="relative w-full">
       <input
         [(ngModel)]="searchQuery"
         (input)="onSearch()"
         id="search"
-        class="h-12 mb-4 w-full rounded-lg-lg px-5 text-lg"
+        class="h-12 w-full rounded-lg px-5 text-lg"
         type="text"
         placeholder="Search for a videogame"
       />
-      <button class="  shadow-inner-buttons h-10 w-1/3 text-white px-5 bg-amber-600 text-lg">
-        Skip!
-      </button>
-      <button
-        class="h-10 shadow-inner-buttons w-1/2 text-white px-5 bg-blue-600 text-lg"
-        (click)="onGuessClick()"
+      <ul
+        *ngIf="searchQuery && filteredGameNames.length && !filteredGameNames.includes(searchQuery)"
+        class="autocomplete-list absolute bg-white shadow-lg border border-gray-300 rounded-lg w-full z-10"
       >
-        Guess
-      </button>
+        <li
+          *ngFor="let name of filteredGameNames"
+          (click)="searchQuery = name"
+          class="autocomplete-item cursor-pointer px-4 py-2 hover:bg-gray-200"
+        >
+          {{ name }}
+        </li>
+      </ul>
     </div>
+    <button class="shadow-inner-buttons mt-4 h-10 w-1/3 text-white px-5 bg-amber-600 text-lg">
+      Skip!
+    </button>
+    <button
+      class="h-10 shadow-inner-buttons mt-4 w-1/2 text-white px-5 bg-blue-600 text-lg"
+      (click)="onGuessClick()"
+    >
+      Guess
+    </button>
   </div>
+</div>
+
   <div class="w-full mt-4">
     <div class="text-white text-md">
       <div class="flex justify-center  gap-5 ">
@@ -60,7 +75,7 @@
           Developers
         </div>
     </div>
-      <div class="flex justify-center georgia gap-5 mb-5" *ngFor="let attempt of match.attempts">
+      <div class="flex justify-center georgia gap-5 mb-5" *ngFor="let attempt of match.attempts.slice().reverse()">
           <div  [ngStyle]="{ 'background-color': attempt.name === match.answer.name ? 'green' : '#D91515' }" class="rounded-lg border-2 shadow-inner-corners border-white  text-lg max-h-[150px] w-[200px] p-5 overflow-scroll break-words text-center   ">
             {{ attempt.name }}
           </div>

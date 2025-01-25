@@ -6,7 +6,6 @@
     {{ errorMessage.message }}
   </div>
 </div>
-
 <div
   *ngIf="match"
   class=" h-[100vh] flex flex-col gap-2 mx-auto items-center"
@@ -62,11 +61,12 @@
         </div>
     </div>
       <div class="flex justify-center georgia gap-5 mb-5" *ngFor="let attempt of match.attempts">
-          <div [ngStyle]="{ 'background-color': attempt.name === match.answer.name ? 'green' : '#D91515' }" class="rounded-lg border-2 shadow-inner-corners  border-white  text-lg max-h-[150px] w-[200px] p-5 overflow-scroll break-words text-center   ">
+          <div  [ngStyle]="{ 'background-color': attempt.name === match.answer.name ? 'green' : '#D91515' }" class="rounded-lg border-2 shadow-inner-corners border-white  text-lg max-h-[150px] w-[200px] p-5 overflow-scroll break-words text-center   ">
             {{ attempt.name }}
           </div>
           <div [ngStyle]="{ 'background-color': attempt.released.slice(0,4) === match.answer.released.slice(0,4) ? 'green' : '#D91515' }" class="bg-[#D91515] rounded-lg border-2 shadow-inner-corners  border-white text-lg max-h-[150px] w-[200px] p-5 overflow-x-scroll break-words text-center  ">
             {{ attempt.released.slice(0,4) }}
+            <img *ngIf="attempt.released.slice(0,4) !== match.answer.released.slice(0,4)" [ngStyle]="{ 'transform': attempt.released.slice(0,4) < match.answer.released.slice(0,4) ? 'rotate(180deg)' : 'none' }" src="/arrow.png" alt="arrow" class="h-16 mx-auto opacity-40"/>
           </div>
           <div
           [ngStyle]="{ 'background-color': getBackgroundColor(attempt.platforms, match.answer.platforms)}"

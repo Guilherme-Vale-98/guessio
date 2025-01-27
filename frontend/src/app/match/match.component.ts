@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatchInterface } from '../types/MatchInterface';
 import { MatchService } from '../services/match.service';
 import { CommonModule } from '@angular/common';
-import {FormsModule } from '@angular/forms'
+import { FormsModule } from '@angular/forms';
 import { ErrorInterface } from '../types/ErrorInterface';
 
 @Component({
@@ -10,15 +10,22 @@ import { ErrorInterface } from '../types/ErrorInterface';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './match.component.html',
-  styleUrl: './match.component.css'
+  styleUrl: './match.component.css',
 })
 export class MatchComponent implements OnInit {
-  match!: MatchInterface; 
+  match!: MatchInterface;
   searchQuery: string = '';
-  errorMessage: ErrorInterface = {title:"", message: ""}; 
+  errorMessage: ErrorInterface = { title: '', message: '' };
   allGameNames: string[] = [];
   filteredGameNames: string[] = [];
+  pixelationLevel: number = 50; 
+  rowNumber: number = 0;
+  columnNumber: number = 1;
 
+
+  @ViewChild('pixelCanvas', { static: true }) pixelCanvas!: ElementRef<HTMLCanvasElement>;
+  private ctx!: CanvasRenderingContext2D;
+  private originalImage!: HTMLImageElement;
 
   constructor(private matchService: MatchService) {}
 
@@ -26,31 +33,109 @@ export class MatchComponent implements OnInit {
     this.matchService.getMatch().subscribe({
       next: (matchData) => {
         this.match = matchData;
+        this.loadImage(matchData.answer.imageUrls[0]);  
+
       },
-      error: (error) =>{
-        this.errorMessage['message'] = error.message
-        this.errorMessage['title'] = error.name
-      }
+      error: (error) => {
+        this.errorMessage['message'] = error.message;
+        this.errorMessage['title'] = error.name;
+      },
     });
 
-
     this.matchService.getGameNames().subscribe({
-      next:(gameNames) => {
+      next: (gameNames) => {
         this.allGameNames = gameNames;
       },
-      error: (error) =>{
-        this.errorMessage['message'] = error.message
-        this.errorMessage['title'] = error.name
-      }
-    })
+      error: (error) => {
+        this.errorMessage['message'] = error.message;
+        this.errorMessage['title'] = error.name;
+      },
+    });
+
   }
 
-  onSearch(): void {
-    console.log(this.allGameNames)
-    this.filteredGameNames = this.allGameNames.filter((name) =>
-      name.toLowerCase().includes(this.searchQuery.toLowerCase())
+  loadImage(imageUrl: string): void {
+    this.originalImage = new Image();
+    this.originalImage.src = imageUrl;
+    this.originalImage.onload = () => {
+      this.ctx = this.pixelCanvas.nativeElement.getContext('2d')!;
+      this.renderPixelatedImage();
+    };
+  }
+  revealImage(): void {
+    const canvas = this.pixelCanvas.nativeElement;
+    const ctx = this.ctx;
+  
+    const startX = (canvas.width * this.rowNumber) / 2;
+    const startY = (canvas.height * this.columnNumber) / 3;
+    const regionWidth = canvas.width / 2;
+    const regionHeight = canvas.height / 3;
+  
+    const animateRegionPixelation = (currentPixelation: number) => {
+      if (currentPixelation < 1)  return;
+      
+      const scaledWidth = regionWidth / currentPixelation;
+      const scaledHeight = regionHeight / currentPixelation;
+  
+      ctx.drawImage(
+        this.originalImage,
+        startX, startY, regionWidth, regionHeight,
+        startX, startY, scaledWidth, scaledHeight 
+      );
+  
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(
+        canvas,
+        startX, startY, scaledWidth, scaledHeight, 
+        startX, startY, regionWidth, regionHeight 
+      );
+  
+
+      setTimeout(() => animateRegionPixelation(currentPixelation - 1), 30);
+    };
+  
+    animateRegionPixelation(this.pixelationLevel);
+  
+
+    this.rowNumber++;
+    if (this.rowNumber % 2 === 0) {
+      this.columnNumber++;
+      this.rowNumber = 0;
+    }
+  }
+
+  renderPixelatedImage(): void {
+    const canvas = this.pixelCanvas.nativeElement;
+    const ctx = this.ctx;
+    const pixelSize = this.pixelationLevel;
+
+    canvas.width = this.originalImage.width;
+    canvas.height = this.originalImage.height;
+
+
+    const scaledWidth = canvas.width / pixelSize;
+    const scaledHeight = canvas.height / pixelSize;
+
+    ctx.drawImage(this.originalImage, 0, 0, scaledWidth, scaledHeight);
+
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(
+      canvas,
+      0,
+      0,
+      scaledWidth,
+      scaledHeight,
+      0,
+      0,
+      canvas.width,
+      canvas.height
     );
-    console.log(this.filteredGameNames);
+
+    ctx.drawImage(
+      this.originalImage,
+      0,0, canvas.width, canvas.height/3,
+      0,0, canvas.width, canvas.height/3
+    );
   }
 
   getBackgroundColor(attemptArray: string[], answerArray: string[]){
@@ -63,20 +148,28 @@ export class MatchComponent implements OnInit {
 
     return '#D7AB19';
   }
+  onSearch(): void {
+    this.filteredGameNames = this.allGameNames.filter((name) =>
+      name.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
+
   onGuessClick(): void {
-    if (!this.match) return;
+    if (!this.match || this.match.status === 'FINISHED') return;
     if (!this.filteredGameNames.includes(this.searchQuery)) return;
-    this.errorMessage = {title:"", message: ""};
+
+    this.errorMessage = { title: '', message: '' };
     this.matchService.attemptAnswer(this.searchQuery, this.match.id).subscribe({
       next: (updatedMatch) => {
         this.match = updatedMatch;
-        console.log(this.match);
+        this.revealImage();
       },
       error: (error) => {
         this.errorMessage['message'] = error.error;
         this.errorMessage['title'] = error.name;
-      }
+      },
     });
+
   }
 
   newMatch(): void {

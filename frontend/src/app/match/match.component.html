@@ -62,8 +62,17 @@
       </button>
     </div>
   </div>
-
-  <div class="w-full mt-2">
+  <div class="w-full mt-2 bg text-center text-white text-2xl">
+      <div class="flex items-center justify-center">
+        <div class="mr-5">attempts:</div>
+        <img *ngFor="let entry of hearts" [src]="entry" class="w-10 h-10" alt="hearts" />
+      </div>
+  </div>
+  <div class="w-full mt-2 bg text-center text-white text-4xl" *ngIf="match?.status === 'FINISHED'">
+    <div>{{match.answer.name === searchQuery? "Congratulations": "I'm Sorry You Lost..."}}</div>
+    <div>{{match.answer.name}}</div>
+  </div>
+  <div class="w-full mt-2 bg">
     <div class="text-white text-md">
       <div class="flex justify-center gap-5">
         <div class="w-[200px] flex px-4 items-center justify-center h-20">
@@ -87,7 +96,7 @@
       </div>
       <div
         class="flex justify-center georgia gap-5 mb-5"
-        *ngFor="let attempt of match.attempts.slice().reverse()"
+        *ngFor="let attempt of match?.attempts?.slice()?.reverse()"
       >
         <div
           [ngStyle]="{

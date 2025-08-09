@@ -35,8 +35,7 @@ public class MatchService {
             throw new MatchExceptions.MatchFinishedException("This match is finished.");
         }
 
-        if (match.getAttempts().size() >= 5) {
-            match.setStatus(MatchStatus.FINISHED);
+        if (match.getAttempts().size() > 5) {
             throw new MatchExceptions.MaximumAttemptsReachedException("Maximum attempts reached. The match is now finished.");
         }
         if(match.getAttempts().contains(attempt)){
@@ -50,7 +49,9 @@ public class MatchService {
         if (isCorrect) {
             match.setStatus(MatchStatus.FINISHED);
         }
-
+        if(match.getAttempts().size() == 5){
+            match.setStatus(MatchStatus.FINISHED);
+        }
         matchRepository.save(match);
 
         return isCorrect;

@@ -1,4 +1,4 @@
-# Guessio 🎮
+# Guessio 
 
 **Guess the video game from a pixelated screenshot.**
 
@@ -6,10 +6,10 @@ A new match picks a random game and renders its screenshot heavily pixelated on 
 
 ## How it works
 
-- **Match flow** — the backend creates a match with a random answer drawn from the games collection; guesses are validated server-side and the match state (attempts, status) is persisted, so a match survives a page refresh.
-- **Pixelation reveal** — the frontend renders the screenshot on a canvas and animates region-by-region de-pixelation as attempts are used.
-- **Autocomplete** — guesses are picked from the real game-name list, so no typo frustration.
-- **Game data** — a seeding script imports games (name, release, rating, genres, platforms, screenshots, developers, publishers) from the [RAWG Video Games Database API](https://rawg.io/apidocs) into MongoDB.
+- **Match flow** the backend creates a match with a random answer drawn from the games collection; guesses are validated server-side and the match state (attempts, status) is persisted, so a match survives a page refresh.
+- **Pixelation reveal** the frontend renders the screenshot on a canvas and animates region-by-region de-pixelation as attempts are used.
+- **Autocomplete** guesses are picked from the real game-name list, so no typo frustration.
+- **Game data** a seeding script imports games (name, release, rating, genres, platforms, screenshots, developers, publishers) from the [RAWG Video Games Database API](https://rawg.io/apidocs) into MongoDB.
 
 ## Tech stack
 
